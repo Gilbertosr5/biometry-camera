@@ -1,20 +1,66 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity
+} from 'react-native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { palette } from './src/helpers';
+import Feather from 'react-native-vector-icons/Feather';
 
-export default function App() {
+import { AppStateProvider } from './src/contexts/AppState';
+
+import {
+  Home,
+  Login
+} from "./src/screens/index";
+
+const Stack = createNativeStackNavigator();
+
+function App(): React.JSX.Element {
+  const logOut = (navigation: any) => {
+    console.log('Log Out');
+    console.log(typeof navigation);
+    navigation.navigate('Login');
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <AppStateProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName='Login'>
+          <Stack.Screen
+            name='Login' 
+            component={Login}
+            options={{ headerShown: false }} 
+          />
+          <Stack.Screen 
+            name='Home' 
+            component={Home} 
+            options={({navigation})=>(
+              {
+                title: 'Profile',
+                headerStyle: {
+                  backgroundColor: palette.white.hex,
+                },
+                headerLeft: () =>(
+                  <TouchableOpacity onPress={()=> {
+                    logOut(navigation);
+                  }} style={{marginLeft: 5, marginRight:15}}>
+                    <Feather name="log-out" size={20} color={palette.primary.hex} />
+                  </TouchableOpacity>
+                ),
+                headerTintColor: palette.primary.hex,
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+              })
+            }
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AppStateProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
