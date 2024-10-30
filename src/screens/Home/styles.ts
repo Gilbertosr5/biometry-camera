@@ -60,7 +60,7 @@ export const Section = styled.View`
 `;
 
 export const SectionTitle = styled.Text`
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
   color: ${palette.primary.hex};
   border-bottom-width: .5px;

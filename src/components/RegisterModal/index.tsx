@@ -14,6 +14,7 @@ interface RegisterModalProps{
 export const RegisterModal = ({visible, setVisible, request, pictureUri, loading}: RegisterModalProps)=>{
   const [isFocused, setIsFocused] = useState(false);
   const [username, setUsername] = useState("");
+  const [level, setLevel] = useState<string>("");
 
   const handleClose = ()=>{
     setUsername("");
@@ -44,7 +45,24 @@ export const RegisterModal = ({visible, setVisible, request, pictureUri, loading
                 value={username}
                 onChangeText={(text)=> setUsername(text)}
               />
-              <S.Button disabled={!pictureUri || (!username && username == "")} onPress={()=> request(username)}>
+              <S.LightText>Nível (1 à 3):</S.LightText>
+              <S.Input
+                placeholder="Digite o número do nível"
+                placeholderTextColor={palette.dark.rgba(0.4)}
+                onFocus={()=> setIsFocused(true)}
+                onBlur={()=> setIsFocused(false)}
+                isFocused={isFocused}
+                value={level}
+                keyboardType="number-pad"
+                onChangeText={(text)=> {
+                  if((parseInt(text) > 3 || parseInt(text) < 1) || !parseInt(text)){
+                    setLevel("");
+                  }else{
+                    setLevel(text);
+                  }
+                }}
+              />
+              <S.Button disabled={!pictureUri || (!username && username == "") || (!level && level == '')} onPress={()=> request(username, level)}>
                 <S.ButtonText disabled={!pictureUri || (!username && username == "")}>
                   {loading? <ActivityIndicator color={palette.light.hex} size={15} /> :"Cadastrar"}
                 </S.ButtonText>

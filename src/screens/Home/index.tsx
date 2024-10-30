@@ -1,11 +1,78 @@
 import React from "react";
-import { View } from "react-native";
+import { View, FlatList } from "react-native";
 import EvilIcons from "react-native-vector-icons/EvilIcons"
 
 import * as S from "./styles";
 import { palette } from "../../helpers";
+import { useRoute } from "@react-navigation/native";
+import { FaceDetectorContext } from "../../contexts/FaceDetector";
 
-const Home = ({navigation, route}) => {
+const Home = () => {
+  const { username } = React.useContext(FaceDetectorContext);
+
+  const randomContent = [
+    {
+      id: 1,
+      title:"Desmatamento na Amazônia",
+      content: "A Amazônia perde milhões de árvores todos os anos, Desmatamento destrói biodiversidade e ecossistemas inteiros, Poluição do ar aumenta com queimadas descontroladas, Luta global para proteger a maior floresta tropical do mundo.",
+      level: 1,
+    },
+    {
+      id: 2,
+      title:"Poluição dos Oceanos",
+      content: "Toneladas de plástico invadem nossos mares, Animais marinhos sofrem e muitas vezes morrem, Resíduos tóxicos contaminam a vida aquática, Soluções urgentes são necessárias para salvar os oceanos.",
+      level: 2,
+    },
+    {
+      id: 3,
+      title:"Aquecimento Global",
+      content: "Temperaturas médias sobem de forma alarmante, Geleiras derretem, níveis do mar aumentam, Eventos climáticos extremos se tornam mais frequentes, Todos nós temos um papel na mitigação do aquecimento global.",
+      level: 3,
+    },
+    {
+      id: 4,
+      title:"Extinção de Espécies",
+      content: "Milhares de espécies estão desaparecendo a um ritmo alarmante, Perda de habitat e mudanças climáticas são culpados principais, Cada extinção desequilibra nossos ecossistemas, Conservação é vital para manter a biodiversidade.",
+      level: 1,
+    },
+    {
+      id: 5,
+      title:"Desastres Naturais",
+      content: "Incêndios florestais, inundações e furacões aumentam, Alterações climáticas intensificam desastres naturais, Comunidades vulneráveis sofrem as maiores perdas, Mitigação e adaptação são essenciais para sobrevivência.",
+      level: 2,
+    },
+    {
+      id: 6,
+      title:"Poluição do Ar",
+      content: "Qualidade do ar decai em cidades ao redor do mundo, Emissões de fábricas e veículos são grandes vilões, Doenças respiratórias se proliferam com a poluição, Descarbonização e energia limpa são caminhos necessários.",
+      level: 3,
+    },
+    {
+      id: 7,
+      title:"Esgotamento dos Recursos Naturais",
+      content: "Exploração excessiva esgota recursos cruciais, Água, minerais e combustíveis fósseis em risco, Sustentabilidade e reciclagem são imperativos globais, Preservar o planeta é responsabilidade de todos.",
+      level: 2,
+    },
+    {
+      id: 8,
+      title:"Desafios da Energia Renovável",
+      content: "Energia eólica e solar são promessas para o futuro, Investimentos ainda precisam crescer exponencialmente, Transição energética enfrenta barreiras econômicas e políticas, Renováveis são chave para um amanhã sustentável.",
+      level: 1,
+    },
+  ]
+
+  const renderItem = ({item})=>{
+    return(
+      <S.Section key={item.id}>
+        <S.SectionTitle>
+          {item.title}  
+          <S.Level style={{fontSize:12}}> nível {item.level}</S.Level>
+        </S.SectionTitle>
+        <S.Text>{item.content}</S.Text>
+      </S.Section>
+    )
+  }
+
   return (
     <S.Container>
       <S.Header>
@@ -14,25 +81,17 @@ const Home = ({navigation, route}) => {
             <EvilIcons name="user" color={palette.dark.rgba(.7)} size={70} />
           </S.ImageContainer>
           <View>
-            <S.ProfileName>Gilberto dos Santos Ribeiro</S.ProfileName>
-            <S.Level>Nível 57</S.Level>
+            <S.ProfileName>{username}</S.ProfileName>
+            <S.Level>Nível 3</S.Level>
           </View>
         </S.Row>
       </S.Header>
 
-      <S.Section>
-        <S.SectionTitle>Section Title 1</S.SectionTitle>
-        <S.Text>Lorem Ipson asdhadioasdjahdiausdahdkuashdiaudgaidjkahsduagduyahdbagsaduyagd</S.Text>
-      </S.Section>
-      <S.Section>
-        <S.SectionTitle>Section Title 2</S.SectionTitle>
-        <S.SectionSubTitle>Section Subtitle</S.SectionSubTitle>
-        <S.Text>Lorem Ipson asdhadioasdjahdiausdahdkuashdiaudgaidjkahsduagduyahdbagsaduyagd</S.Text>
-      </S.Section>
-      <S.Section>
-        <S.SectionTitle>Section Title 3</S.SectionTitle>
-        <S.Text>Lorem Ipson asdhadioasdjahdiausdahdkuashdiaudgaidjkahsduagduyahdbagsaduyagd</S.Text>
-      </S.Section>
+      <FlatList
+        renderItem={renderItem}
+        data={randomContent}
+        keyExtractor={item => item.id}
+      />
     </S.Container>
   );
 };
