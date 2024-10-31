@@ -16,11 +16,12 @@ const Login = ({ navigation })=>{
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const cameraRef = useRef(null)
   const [picture, setPicture] = React.useState(null);
+  const [cameraOn, setCameraOn] = React.useState(true);
   const [pictureUri, setPictureUri] = React.useState(null);
   const [helloVisible, setHelloVisible] = React.useState(true);
   const [registerVisible, setRegisterVisible] = React.useState(false);
   const [loadingRegister, setLoadingRegister] = React.useState(false);
-  const { setUsername } = React.useContext(FaceDetectorContext);
+  const { setUsername, setRole } = React.useContext(FaceDetectorContext);
   const url = 'http://192.168.15.7:8080';
 
   useEffect(()=>{
@@ -52,12 +53,14 @@ const Login = ({ navigation })=>{
       });
       console.log("Response:", response.data);
       setUsername(response.data.username);
+      setRole(response.data.role);
       cleanPicture();
       Toast.show({
         type: 'success',
         text1: 'Bem vindo, ' + response.data.username+"!",
         text2: 'Logado com sucesso.',
       })
+      setCameraOn(false);
       navigation.navigate('Home', {username: response.data.username});
     } catch (error) {
       Toast.show({
@@ -78,9 +81,11 @@ const Login = ({ navigation })=>{
       name: username + '_face.jpg',
       type: 'image/jpeg'
     });
+    body.append('username', username);
+    body.append('role', String(level.toLowerCase()));
     setLoadingRegister(true);
     try {
-      console.log("Tentando fazer a requisição registrar")
+      console.log("Tentando fazer a requisição registrar\n", body)
       const response = await axios.post(`${url}/register/${username}`, body, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -88,6 +93,8 @@ const Login = ({ navigation })=>{
       });
       console.log('Response:', response.data);
       setUsername(response.data.username);
+      setRole(response.data.role);
+      setCameraOn(false);
       navigation.navigate('Home', {username: response.data.username});
     } catch (error) {
       Toast.show({
@@ -152,8 +159,12 @@ const Login = ({ navigation })=>{
       </S.Header>
       <S.Body>
         {
-          permission ? <CameraComponent />
-          : (
+          permission ? cameraOn? <CameraComponent />
+          :(
+            <S.SignInBtn onPress={()=> setCameraOn(true)}>
+              <S.SignInBtnText>Habilitar camera</S.SignInBtnText>
+            </S.SignInBtn>
+          ) : (
             <S.SignInBtn onPress={()=> Linking.openSettings()}>
               <S.SignInBtnText>Habilitar camera</S.SignInBtnText>
             </S.SignInBtn>

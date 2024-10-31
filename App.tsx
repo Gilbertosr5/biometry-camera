@@ -16,11 +16,12 @@ import {
   Home,
   Login
 } from "./src/screens/index";
-import { FaceDetectorProvider } from './src/contexts/FaceDetector';
+import { FaceDetectorContext, FaceDetectorProvider } from './src/contexts/FaceDetector';
 
 const Stack = createNativeStackNavigator();
 
 function App(): React.JSX.Element {
+  // const { setRole, setUsername } = React.useContext(FaceDetectorContext);
   const logOut = (navigation: any) => {
     console.log('Log Out');
     console.log(typeof navigation);
@@ -48,6 +49,8 @@ function App(): React.JSX.Element {
                   },
                   headerLeft: () =>(
                     <TouchableOpacity onPress={()=> {
+                      // setRole('');
+                      // setUsername('');
                       logOut(navigation);
                     }} style={{marginLeft: 5, marginRight:15}}>
                       <Feather name="log-out" size={20} color={palette.primary.hex} />

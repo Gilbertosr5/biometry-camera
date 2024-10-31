@@ -18,8 +18,12 @@ export const RegisterModal = ({visible, setVisible, request, pictureUri, loading
 
   const handleClose = ()=>{
     setUsername("");
+    setLevel("");
     setVisible(false);
   }
+
+  const level_rule = level === "" 
+    || (level.toLowerCase() !== "normal" && level.toLowerCase() !== "director" && level.toLowerCase() !== "minister");
 
   return(
     <S.Modal
@@ -45,7 +49,7 @@ export const RegisterModal = ({visible, setVisible, request, pictureUri, loading
                 value={username}
                 onChangeText={(text)=> setUsername(text)}
               />
-              <S.LightText>Nível (1 à 3):</S.LightText>
+              <S.LightText>Nível (normal, director ou minister):</S.LightText>
               <S.Input
                 placeholder="Digite o número do nível"
                 placeholderTextColor={palette.dark.rgba(0.4)}
@@ -53,18 +57,11 @@ export const RegisterModal = ({visible, setVisible, request, pictureUri, loading
                 onBlur={()=> setIsFocused(false)}
                 isFocused={isFocused}
                 value={level}
-                keyboardType="number-pad"
-                onChangeText={(text)=> {
-                  if((parseInt(text) > 3 || parseInt(text) < 1) || !parseInt(text)){
-                    setLevel("");
-                  }else{
-                    setLevel(text);
-                  }
-                }}
+                onChangeText={(text)=> setLevel(text)}
               />
-              <S.Button disabled={!pictureUri || (!username && username == "") || (!level && level == '')} onPress={()=> request(username, level)}>
+              <S.Button disabled={!pictureUri || (!username && username == "") || level_rule} onPress={()=> request(username, level)}>
                 <S.ButtonText disabled={!pictureUri || (!username && username == "")}>
-                  {loading? <ActivityIndicator color={palette.light.hex} size={15} /> :"Cadastrar"}
+                  {loading? <ActivityIndicator color={palette.dark.hex} size={15} /> :"Cadastrar"}
                 </S.ButtonText>
               </S.Button>
             </S.ButtonArea>

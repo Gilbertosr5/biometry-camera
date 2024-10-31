@@ -58,7 +58,7 @@ export const Bold = styled.Text`
 
 export const LightText = styled.Text`
   color: ${palette.light.hex};
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 500;
   width: 100%;
   text-align: left;
